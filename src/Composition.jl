@@ -4,6 +4,33 @@
 
 # 1️⃣. Composed bijection type
 # Represents:  A --b1--> B --b2--> C
+"""
+    ComposedBijection{𝒜,ℬ,𝒞}
+
+A bijection obtained by composition:
+
+    𝒜 ──𝒷₁──▶ ℬ ──𝒷₂──▶ 𝒞
+
+It represents the transformation `𝒷₂ ∘ 𝒷₁ : 𝒜 → 𝒞`.
+
+# Fields
+- `b1` — first bijection `𝒜 → ℬ`
+- `b2` — second bijection `ℬ → 𝒞`
+
+# Semantics
+Calling the composed bijection applies the maps in sequence:
+
+    (𝒷₂ ∘ 𝒷₁)(x) = 𝒷₂(𝒷₁(x))
+
+The intermediate space `ℬ` is enforced by the type system,
+so only compatible bijections can be composed.
+
+# Examples
+```julia
+b = b2 ∘ b1
+b(x) == b2(b1(x))
+```
+"""
 struct ComposedBijection{A,B,C,B1,B2} <: AbstractBijection{A,C}
     b1::B1  # first bijection  A → B
     b2::B2  # second bijection B → C
@@ -29,16 +56,17 @@ ComposedBijection(b1::F, b2::G) where
     ComposedBijection{A,B,C,F,G}(b1, b2)
 
 # 3. Make ComposedBijection callable
-(b::ComposedBijection)(x) =
+function (b::ComposedBijection{A,B,C})(x::A)::C where {A,B,C} 
     b.b2(b.b1(x))
-
+end
 
 # 4️⃣. Inverse of a composition
 # If b = b2 ∘ b1, then b⁻¹ = b1⁻¹ ∘ b2⁻¹
 # The same type parameters A,B,C are reused here.
-inverse(b::ComposedBijection) =
-    inverse(b.b1) ∘ inverse(b.b2)
 
+function inverse(b::ComposedBijection{A,B,C}) where {A,B,C} 
+    inverse(b.b1) ∘ inverse(b.b2)
+end
 
 # 5️⃣. Extend composition operator
 import Base: ∘
