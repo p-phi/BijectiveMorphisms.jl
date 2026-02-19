@@ -10,6 +10,7 @@ module Bijectivism
 include("Bijection.jl")
 include("Composition.jl")
 include("Validation.jl")
+include("Show.jl")
 
 export 
     Bijection,
