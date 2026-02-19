@@ -6,7 +6,7 @@
 # checks that f is valid by asserting:
 # f⁻¹(f(x)) = x
 """
-    check_roundtrip(𝒷::AbstractBijection, xs; eq = isequal) -> Bool
+    validate(𝒷::AbstractBijection, xs; eq = isequal) -> Bool
 
 Empirically verify the round-trip law for a bijection on a finite sample.
 
@@ -35,15 +35,15 @@ f = x -> x + 1
 g = y -> y - 1
 b = Bijection(f, g, Int, Int)
 
-check_roundtrip(b, 1:10)  # true
+validate(b, 1:10)  # true
 ```
 Custom equality:
 ```julia
 b = Bijection(sqrt, x -> x^2, Float64, Float64)
-check_roundtrip(b, 1:10; eq = ≈)  # true
+validate(b, 1:10; eq = ≈)  # true
 
 ```
 """
-function check_roundtrip(f::AbstractBijection, xs; eq = isequal)::Bool
+function validate(f::AbstractBijection, xs; eq = isequal)::Bool
     all(eq(inverse(f)(f(x)), x) for x in xs)
 end

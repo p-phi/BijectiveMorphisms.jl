@@ -36,7 +36,7 @@ A Bijection{𝒜,ℬ,typeof(𝒻),typeof(ℊ)} object that is callable on values
 
 # Notes
 The user is responsible for ensuring that `𝒻` and `ℊ` actually form a bijection.
-Round-trip correctness can be verified with `check_roundtrip`.
+Round-trip correctness can be verified with `validate`.
 
 # Example
 ```julia

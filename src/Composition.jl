@@ -57,7 +57,8 @@ ComposedBijection(b1::F, b2::G) where
 
 # 3. Make ComposedBijection callable
 function (b::ComposedBijection{A,B,C})(x::A)::C where {A,B,C} 
-    b.b2(b.b1(x))
+    y = b.b1(x)::B
+    b.b2(y)::C
 end
 
 # 4️⃣. Inverse of a composition
@@ -75,7 +76,16 @@ import Base: ∘
 #   b1 is A→B
 #   b2 is B→C
 # The shared B is enforced by the type system.
-(∘)(b2::AbstractBijection{B,C},
-    b1::AbstractBijection{A,B}) where {A,B,C} =
+function(∘)(b2::AbstractBijection{B,C},
+    b1::AbstractBijection{A,B}) where {A,B,C}
     ComposedBijection(b1, b2)
+end
 
+# This makes the composition failed for general bijections by default,
+# so co-domain-mismatched bijections fail at construction time
+function (∘)(
+    ::AbstractBijection,
+    ::AbstractBijection
+)
+    throw(MethodError(∘, "Bijection domains do not match"))
+end

@@ -9,11 +9,11 @@ module Bijectivism
 
 include("Bijection.jl")
 include("Composition.jl")
-include("Checks.jl")
+include("Validation.jl")
 
 export 
     Bijection,
     inverse,
-    check_roundtrip
+    validate
 end
 
