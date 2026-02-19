@@ -4,5 +4,5 @@ using Test
 @testset "Bijectivism.jl" begin
     include("bijection.jl")
     include("composition.jl")
-    include("roundtrip.jl")
+    include("validation.jl")
 end
