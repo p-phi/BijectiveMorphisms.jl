@@ -16,16 +16,12 @@
 - 🧪 Round-trip validation helpers
 - 🖥️ Clean REPL display
 
----
-
 ## 📦 Installation
 
 ```julia
 using Pkg
 Pkg.add("Bijectivism")
 ```
-
----
 
 ## 🚀 Quick start
 
@@ -42,8 +38,6 @@ f(10)
 inverse(f)(11)
 # 10
 ```
-
----
 
 ## ∘ Composition
 
@@ -65,11 +59,9 @@ inverse(h)(22)
 
 Composition is only allowed when the intermediate types match.
 
----
-
 ## 🧪 Round-trip validation
 
-Bijectivism does **not** try to prove bijectivity at construction time.
+Bijectivism.jl does **not** try to prove bijectivity at construction time.
 Instead, it provides a practical correctness check:
 
 ```julia
@@ -87,16 +79,14 @@ validate(b, 1:10; eq = ≈)  # true
 
 You stay in control of the acceptable numerical or structural error.
 
----
-
 ## 📐 Design philosophy
 
-Bijectivism enforces:
+Bijectivism.jl enforces:
 
 - domain and codomain types
 - compositional correctness
 
-Bijectivism deliberately does **not** enforce:
+Bijectivism.jl deliberately does **not** enforce:
 
 - mathematical bijectivity
 
@@ -107,9 +97,7 @@ This keeps the abstraction:
 - lightweight and fast
 
 You are responsible for defining meaningful inverses;
-Bijectivism guarantees that they are used consistently.
-
----
+Bijectivism.jl guarantees that they are used consistently.
 
 ## 🧠 API overview
 
@@ -127,13 +115,17 @@ Bijectivism guarantees that they are used consistently.
 
 - `validate(b, xs; eq = isequal)`
 
----
+### Docstrings
+
+```julia
+?Bijection
+?inverse
+?validate
+```
 
 ## 🤝 Contributing
 
 Issues and PRs are welcome.
-
----
 
 ## 📄 License
 

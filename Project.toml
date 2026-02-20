@@ -1,7 +1,7 @@
 name = "Bijectivism"
 uuid = "e5cea73a-f0c5-479d-b77e-c222d88b476b"
+version = "0.1.0"
 authors = ["P. Phi"]
-version = "0.0.1"
 
 [compat]
 julia = "1.12"
