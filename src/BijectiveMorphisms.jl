@@ -1,19 +1,19 @@
 """
-Bijectivism.jl — composable reversible transformations.
+BijectiveMorphisms.jl — composable reversible transformations.
 
 This package provides a lightweight algebra for bijections.
 It does not attempt to prove global bijectivity; instead,
 it offers tools to verify round-trip correctness on concrete domains.
 """
-module Bijectivism
+module BijectiveMorphisms
 
-include("Bijection.jl")
+include("BijectiveMorphism.jl")
 include("Composition.jl")
 include("Validation.jl")
 include("Show.jl")
 
 export 
-    Bijection,
+    BijectiveMorphism,
     inverse,
     validate
 end

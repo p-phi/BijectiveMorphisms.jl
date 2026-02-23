@@ -1,8 +1,8 @@
-using Bijectivism
+using BijectiveMorphisms
 using Test
 
-@testset "Bijectivism.jl" begin
-    include("bijection.jl")
+@testset "BijectiveMorphisms.jl" begin
+    include("bijective_morphism.jl")
     include("composition.jl")
     include("validation.jl")
 end

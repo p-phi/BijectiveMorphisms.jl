@@ -1,11 +1,11 @@
 ################################
-# Bijection Composition System #
+# BijectiveMorphism Composition System #
 ################################
 
 # 1️⃣. Composed bijection type
 # Represents:  A --b1--> B --b2--> C
 """
-    ComposedBijection{𝒜,ℬ,𝒞}
+    ComposedBijectiveMorphism{𝒜,ℬ,𝒞}
 
 A bijection obtained by composition:
 
@@ -31,7 +31,7 @@ b = b2 ∘ b1
 b(x) == b2(b1(x))
 ```
 """
-struct ComposedBijection{A,B,C,B1,B2} <: AbstractBijection{A,C}
+struct ComposedBijectiveMorphism{A,B,C,B1,B2} <: AbstractBijectiveMorphism{A,C}
     b1::B1  # first bijection  A → B
     b2::B2  # second bijection B → C
 end
@@ -40,8 +40,8 @@ end
 # 2️⃣. Outer constructor for composition
 # The `where` clause does something very powerful:
 #
-#   F <: AbstractBijection{A,B}
-#   G <: AbstractBijection{B,C}
+#   F <: AbstractBijectiveMorphism{A,B}
+#   G <: AbstractBijectiveMorphism{B,C}
 #
 # This means:
 #   - b1 must be a bijection from A to B
@@ -49,14 +49,14 @@ end
 #   - The intermediate type B must MATCH
 #
 # Julia infers A,B,C automatically from the argument types.
-ComposedBijection(b1::F, b2::G) where
+ComposedBijectiveMorphism(b1::F, b2::G) where
     {A,B,C,
-     F<:AbstractBijection{A,B},
-     G<:AbstractBijection{B,C}} =
-    ComposedBijection{A,B,C,F,G}(b1, b2)
+     F<:AbstractBijectiveMorphism{A,B},
+     G<:AbstractBijectiveMorphism{B,C}} =
+    ComposedBijectiveMorphism{A,B,C,F,G}(b1, b2)
 
-# 3. Make ComposedBijection callable
-function (b::ComposedBijection{A,B,C})(x::A)::C where {A,B,C} 
+# 3. Make ComposedBijectiveMorphism callable
+function (b::ComposedBijectiveMorphism{A,B,C})(x::A)::C where {A,B,C} 
     y = b.b1(x)::B
     b.b2(y)::C
 end
@@ -65,8 +65,9 @@ end
 # If b = b2 ∘ b1, then b⁻¹ = b1⁻¹ ∘ b2⁻¹
 # The same type parameters A,B,C are reused here.
 
-function inverse(b::ComposedBijection{A,B,C}) where {A,B,C} 
+function inverse(b::ComposedBijectiveMorphism{A,B,C}) where {A,B,C} 
     inverse(b.b1) ∘ inverse(b.b2)
+    
 end
 
 # 5️⃣. Extend composition operator
@@ -76,16 +77,16 @@ import Base: ∘
 #   b1 is A→B
 #   b2 is B→C
 # The shared B is enforced by the type system.
-function(∘)(b2::AbstractBijection{B,C},
-    b1::AbstractBijection{A,B}) where {A,B,C}
-    ComposedBijection(b1, b2)
+function(∘)(b2::AbstractBijectiveMorphism{B,C},
+    b1::AbstractBijectiveMorphism{A,B}) where {A,B,C}
+    ComposedBijectiveMorphism(b1, b2)
 end
 
 # This makes the composition failed for general bijections by default,
 # so co-domain-mismatched bijections fail at construction time
 function (∘)(
-    ::AbstractBijection,
-    ::AbstractBijection
+    ::AbstractBijectiveMorphism,
+    ::AbstractBijectiveMorphism
 )
-    throw(MethodError(∘, "Bijection domains do not match"))
+    throw(MethodError(∘, "BijectiveMorphism domains do not match"))
 end

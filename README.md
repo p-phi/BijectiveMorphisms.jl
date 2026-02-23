@@ -1,4 +1,4 @@
-# Bijectivism.jl [![Build Status](https://github.com/p-phi/Bijectivism.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/p-phi/Bijectivism.jl/actions/workflows/CI.yml?query=branch%3Amain)
+# BijectiveMorphisms.jl [![Build Status](https://github.com/p-phi/BijectiveMorphisms.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/p-phi/BijectiveMorphisms.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 > Type-safe, no math  
 > Lean back, no fat  
@@ -7,11 +7,17 @@
 
 ---
 
+## Motivation
+
+This package provides a lightweight framework for safer composition of reversible transformations at an engineering level. It defines a small `AbstractBijectiveMorphism{A,B}` hierarchy that leverages Julia’s parametric types and multiple dispatch to make domain, codomain, forward map, and inverse map explicit, with composition closed within the abstraction.
+
+Packages such as [Bijections.jl](https://github.com/JuliaCollections/Bijections.jl) and [InverseFunctions.jl](https://github.com/JuliaMath/InverseFunctions.jl) address related concerns — reversible map containers and function inversion protocols, respectively — but do not provide a minimal, typed structure for composable reversible transformations. This package is intended to fill that gap.
+
 ## ✨ Features
 
-- 🔁 First-class `Bijection` type
+- 🔁 First-class `BijectiveMorphism` type
 - ∘ Composition with static type checking
-- ⁻¹ Inversion of simple and composed bijections
+- ⁻¹ Inversion of simple and composed bijective morphisms
 - 📐 Domain/codomain enforcement at call time
 - 🧪 Round-trip validation helpers
 - 🖥️ Clean REPL display
@@ -20,15 +26,15 @@
 
 ```julia
 using Pkg
-Pkg.add("Bijectivism")
+Pkg.add("BijectiveMorphisms")
 ```
 
 ## 🚀 Quick start
 
 ```julia
-using Bijectivism
+using BijectiveMorphisms
 
-f = Bijection(x -> x + 1,
+f = BijectiveMorphism(x -> x + 1,
               x -> x - 1,
               Int, Int)
 
@@ -41,10 +47,10 @@ inverse(f)(11)
 
 ## ∘ Composition
 
-Bijections compose like functions, with full type safety:
+BijectiveMorphisms compose like functions, with full type safety:
 
 ```julia
-g = Bijection(x -> x * 2,
+g = BijectiveMorphism(x -> x * 2,
               x -> x ÷ 2,
               Int, Int)
 
@@ -61,7 +67,7 @@ Composition is only allowed when the intermediate types match.
 
 ## 🧪 Round-trip validation
 
-Bijectivism.jl does **not** try to prove bijectivity at construction time.
+BijectiveMorphisms.jl does **not** try to prove bijectivity at construction time.
 Instead, it provides a practical correctness check:
 
 ```julia
@@ -72,7 +78,7 @@ validate(f, 1:100)
 Custom equality:
 
 ```julia
-b = Bijection(sqrt, x -> x^2, Float64, Float64)
+b = BijectiveMorphism(sqrt, x -> x^2, Float64, Float64)
 
 validate(b, 1:10; eq = ≈)  # true
 ```
@@ -81,12 +87,12 @@ You stay in control of the acceptable numerical or structural error.
 
 ## 📐 Design philosophy
 
-Bijectivism.jl enforces:
+BijectiveMorphisms.jl enforces:
 
 - domain and codomain types
 - compositional correctness
 
-Bijectivism.jl deliberately does **not** enforce:
+BijectiveMorphisms.jl deliberately does **not** enforce:
 
 - mathematical bijectivity
 
@@ -97,13 +103,13 @@ This keeps the abstraction:
 - lightweight and fast
 
 You are responsible for defining meaningful inverses;
-Bijectivism.jl guarantees that they are used consistently.
+BijectiveMorphisms.jl guarantees that they are used consistently.
 
 ## 🧠 API overview
 
 ### Core
 
-- `Bijection(f, g, A, B)`
+- `BijectiveMorphism(f, g, A, B)`
 - `inverse(b)`
 - `b(x)`
 
@@ -118,10 +124,16 @@ Bijectivism.jl guarantees that they are used consistently.
 ### Docstrings
 
 ```julia
-?Bijection
+?BijectiveMorphism
 ?inverse
 ?validate
 ```
+
+## Conceptual inspiration
+
+The conceptual motivation behind BijectiveMorphism.jl is _Bijectivism_, which illustrates the idea that every transformation is reversible.
+
+A more detailed description of this epistemic stance is available on [Zenodo](https://zenodo.org/records/18724502).
 
 ## 🤝 Contributing
 
