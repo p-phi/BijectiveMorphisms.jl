@@ -1,6 +1,6 @@
 @testset "Composition" begin
-    f = Bijection(x -> x + 1, x -> x - 1, Int, Int)
-    g = Bijection(x -> x * 2, x -> x ÷ 2, Int, Int)
+    f = BijectiveMorphism(x -> x + 1, x -> x - 1, Int, Int)
+    g = BijectiveMorphism(x -> x * 2, x -> x ÷ 2, Int, Int)
 
     h = f ∘ g
 
@@ -9,9 +9,9 @@
 end
 
 @testset "Composition is associative" begin
-    f = Bijection(x -> x + 1, x -> x - 1, Int, Int)
-    g = Bijection(x -> x * 2, x -> x ÷ 2, Int, Int)
-    i = Bijection(x -> Char(x), x -> Int(x), Int, Char)
+    f = BijectiveMorphism(x -> x + 1, x -> x - 1, Int, Int)
+    g = BijectiveMorphism(x -> x * 2, x -> x ÷ 2, Int, Int)
+    i = BijectiveMorphism(x -> Char(x), x -> Int(x), Int, Char)
 
     h = f ∘ g
     j = i ∘ f
@@ -21,8 +21,8 @@ end
 end
 
 @testset "Composition of inverses" begin
-    f = Bijection(x -> x + 1, x -> x - 1, Int, Int)
-    g = Bijection(x -> x * 2, x -> x ÷ 2, Int, Int)
+    f = BijectiveMorphism(x -> x + 1, x -> x - 1, Int, Int)
+    g = BijectiveMorphism(x -> x * 2, x -> x ÷ 2, Int, Int)
 
     h = f ∘ g
     i = inverse(g) ∘ inverse(f)
@@ -31,8 +31,8 @@ end
 end
 
 @testset "Compositioni must fail if domain mismatch" begin
-    f = Bijection(x -> x + 1, x -> x - 1, Int, Int)
-    g = Bijection(x -> x * 2, x -> x / 2, Float64, Float64)
+    f = BijectiveMorphism(x -> x + 1, x -> x - 1, Int, Int)
+    g = BijectiveMorphism(x -> x * 2, x -> x / 2, Float64, Float64)
 
     @test_throws MethodError h = f ∘ g
 

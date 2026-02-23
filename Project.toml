@@ -1,6 +1,6 @@
-name = "Bijectivism"
+name = "BijectiveMorphisms"
 uuid = "e5cea73a-f0c5-479d-b77e-c222d88b476b"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["P. Phi"]
 
 [compat]
