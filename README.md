@@ -115,6 +115,7 @@ BijectiveMorphisms.jl guarantees that they are used consistently.
 
 ### Composition
 
+- `compose(b2, b1)`
 - `b2 ∘ b1`
 
 ### Validation
@@ -127,6 +128,7 @@ BijectiveMorphisms.jl guarantees that they are used consistently.
 ?BijectiveMorphism
 ?inverse
 ?validate
+?compose
 ```
 
 ## Conceptual inspiration
