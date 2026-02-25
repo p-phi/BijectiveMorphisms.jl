@@ -15,3 +15,23 @@ end
 
     @test !validate(f, 1.0:10.0)
 end
+
+@testset "Roundtrip on composition" begin
+    f = BijectiveMorphism(x -> x + 1, x -> x - 1, Int, Int)
+    g = BijectiveMorphism(x -> Char(x), x -> Int(x), Int, Char)
+
+    h = g ∘ f
+
+    @test validate(h, 1:10)
+    @test validate(inverse(h), ['1','a','v','^',';','∘','Z','*',' ','\n'])
+end
+
+@testset "Roundtrip on composition must fail if non bijective" begin
+    f = BijectiveMorphism(x -> x + 1, x -> x - 2, Int, Int)
+    g = BijectiveMorphism(x -> Char(x), x -> Int(x), Int, Char)
+
+    h = g ∘ f
+
+    @test !validate(h, 1:10)
+    @test !validate(inverse(h), ['1','a','v','^',';','∘','Z','*',' ','\n'])
+end
