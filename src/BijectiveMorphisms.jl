@@ -8,12 +8,12 @@ it offers tools to verify round-trip correctness on concrete domains.
 module BijectiveMorphisms
 
 include("BijectiveMorphism.jl")
-include("Composition.jl")
 include("Validation.jl")
 include("Show.jl")
 
 export 
     BijectiveMorphism,
     inverse,
+    compose,
     validate
 end

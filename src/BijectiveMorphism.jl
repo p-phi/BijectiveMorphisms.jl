@@ -2,11 +2,11 @@
 # Generic BijectiveMorphism System #
 ############################
 
-# 1️⃣. Abstract interface
+# Abstract interface
 abstract type AbstractBijectiveMorphism{A,B} end
 
 
-# 2️⃣. Concrete BijectiveMorphism type
+# Concrete BijectiveMorphism type
 # F and G are the concrete function types for performance
 struct BijectiveMorphism{A,B,F,G} <: AbstractBijectiveMorphism{A,B}
     forward::F   # function A → B
@@ -14,7 +14,7 @@ struct BijectiveMorphism{A,B,F,G} <: AbstractBijectiveMorphism{A,B}
 end
 
 
-# 3️⃣. Outer constructor (type-safe, no reflection)
+# Outer constructor (type-safe, no reflection)
 # The `where {A,B}` introduces method-level type variables.
 # It means:
 #   "This constructor works for ANY A and B,
@@ -51,13 +51,13 @@ function BijectiveMorphism(f::Function, g::Function, ::Type{A}, ::Type{B}) where
 end
 
 
-# 4️⃣. Make bijective morphism callable (forward direction)
+# Make bijective morphism callable (forward direction)
 function (b::BijectiveMorphism{A,B})(x::A)::B where {A,B}
     b.forward(x)
 end
 
 
-# 5️⃣. Inverse operation
+# Inverse operation
 # This works for ANY A,B that the bijective morphism uses.
 # `where` exposes those types so the return type becomes BijectiveMorphism{B,A}.
 """
@@ -78,27 +78,88 @@ A BijectiveMorphism{ℬ,𝒜} where forward = original backward and backward = o
 𝒻⁻¹(4)  # returns 3
 ```
 
----
-    inverse(𝒷::ComposedBijectiveMorphism) -> ComposedBijectiveMorphism
-
-Return the inverse composed bijective morphism.
-
-If:
-
-    𝒷 = 𝒷₂ ∘ 𝒷₁
-
-then:
-
-    𝒷⁻¹ = 𝒷₁⁻¹ ∘ 𝒷₂⁻¹
-
-# Example
-```julia
-𝒻 = BijectiveMorphism(x -> x + 1, y -> y - 1, Int, Int)
-ℊ = BijectiveMorphism(x -> x + 10, y -> y - 10, Int, Int)
-inverse(ℊ ∘ 𝒻)(13)  # returns 2
-(inverse(𝒻) ∘ inverse(ℊ))(13)  # returns 2
-```
 """
 function inverse(b::BijectiveMorphism{A,B}) where {A,B}
     BijectiveMorphism(b.backward, b.forward, B, A)
 end
+
+"""
+    compose(g::BijectiveMorphism{B,C},
+            f::BijectiveMorphism{A,B}) where {A,B,C}
+
+Return the composition `g ∘ f`, yielding a `BijectiveMorphism{A,C}`.
+
+The resulting morphism represents the forward transformation
+
+    x ↦ g(f(x))
+
+and defines its inverse automatically as
+
+    y ↦ inverse(f)(inverse(g)(y))
+
+The shared intermediate type `B` is enforced at the type level,
+ensuring that only composable morphisms can be combined.
+
+This operation preserves bijectivity: the composition of two
+bijective morphisms is itself bijective.
+
+# Examples
+```julia
+b = compose(b2, b1)
+b(x) == b2(b1(x))
+```
+"""
+function compose(g::BijectiveMorphism{B,C},
+                 f::BijectiveMorphism{A,B}) where {A,B,C}
+    BijectiveMorphism(
+        x -> g(f(x)),
+        y -> inverse(f)(inverse(g)(y)),
+        A, C
+    )
+end
+
+# Extend composition operator
+import Base: ∘
+
+# This method applies for ANY A,B,C where:
+#   b1 is A→B
+#   b2 is B→C
+# The shared B is enforced by the type system.
+"""
+    ∘(b2::AbstractBijectiveMorphism{B,C},
+      b1::AbstractBijectiveMorphism{A,B}) where {A,B,C}
+
+Compose two bijective morphisms using the standard composition
+operator `∘`.
+
+This method enforces type compatibility at compile time:
+
+- `b1` maps `A → B`
+- `b2` maps `B → C`
+
+and returns a morphism `A → C`.
+
+The order follows mathematical convention:
+
+    (b2 ∘ b1)(x) == b2(b1(x))
+
+# Examples
+```julia
+b = b2 ∘ b1
+b(x) == b2(b1(x))
+```
+"""
+function(∘)(b2::AbstractBijectiveMorphism{B,C},
+    b1::AbstractBijectiveMorphism{A,B}) where {A,B,C}
+    compose(b2, b1)
+end
+
+# This makes the composition failed for general bijections by default,
+# so co-domain-mismatched bijections fail at construction time
+function (∘)(
+    ::AbstractBijectiveMorphism,
+    ::AbstractBijectiveMorphism
+)
+    throw(MethodError(∘, "BijectiveMorphism domains do not match"))
+end
+
