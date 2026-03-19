@@ -113,6 +113,10 @@ BijectiveMorphisms.jl guarantees that they are used consistently.
 - `inverse(b)`
 - `b(x)`
 
+### Abstract interface
+
+- `AbstractBijectiveMorphism{A,B}`
+
 ### Composition
 
 - `ComposedBijectiveMorphism(b2, b1)`
@@ -125,6 +129,7 @@ BijectiveMorphisms.jl guarantees that they are used consistently.
 ### Docstrings
 
 ```julia
+?AbstractBijectiveMorphism
 ?BijectiveMorphism
 ?inverse
 ?validate

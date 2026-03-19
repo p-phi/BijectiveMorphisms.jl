@@ -3,6 +3,11 @@
 ############################
 
 # Abstract interface
+"""
+    AbstractBijectiveMorphism{A,B}
+
+Abstract interface used by BijectiveMorphism and ComposedBijectiveMorphism
+"""
 abstract type AbstractBijectiveMorphism{A,B} end
 
 

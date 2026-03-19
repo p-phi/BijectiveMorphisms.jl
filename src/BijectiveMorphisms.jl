@@ -11,7 +11,8 @@ include("BijectiveMorphism.jl")
 include("Validation.jl")
 include("Show.jl")
 
-export 
+export
+    AbstractBijectiveMorphism,
     BijectiveMorphism,
     inverse,
     ComposedBijectiveMorphism,
