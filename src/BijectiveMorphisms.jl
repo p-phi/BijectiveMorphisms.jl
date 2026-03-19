@@ -14,6 +14,6 @@ include("Show.jl")
 export 
     BijectiveMorphism,
     inverse,
-    compose,
+    ComposedBijectiveMorphism,
     validate
 end
