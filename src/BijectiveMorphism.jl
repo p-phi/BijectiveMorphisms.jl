@@ -84,7 +84,7 @@ function inverse(b::BijectiveMorphism{A,B}) where {A,B}
 end
 
 """
-    compose(g::BijectiveMorphism{B,C},
+    ComposedBijectiveMorphism(g::BijectiveMorphism{B,C},
             f::BijectiveMorphism{A,B}) where {A,B,C}
 
 Return the composition `g ∘ f`, yielding a `BijectiveMorphism{A,C}`.
@@ -105,17 +105,25 @@ bijective morphisms is itself bijective.
 
 # Examples
 ```julia
-b = compose(b2, b1)
+b = ComposedBijectiveMorphism(b2, b1)
 b(x) == b2(b1(x))
 ```
 """
-function compose(g::BijectiveMorphism{B,C},
-                 f::BijectiveMorphism{A,B}) where {A,B,C}
-    BijectiveMorphism(
-        x -> g(f(x)),
-        y -> inverse(f)(inverse(g)(y)),
-        A, C
-    )
+struct ComposedBijectiveMorphism{F<:AbstractBijectiveMorphism,G<:AbstractBijectiveMorphism,A,B,C} <: AbstractBijectiveMorphism{A,C}
+    f::F
+    g::G
+end
+function ComposedBijectiveMorphism(f::AbstractBijectiveMorphism{A,B}, g::AbstractBijectiveMorphism{B,C}) where {A,B,C}
+    ComposedBijectiveMorphism{typeof(f), typeof(g), A, B, C}(f, g)
+
+end
+
+function (c::ComposedBijectiveMorphism)(x)
+    c.g(c.f(x))
+end
+
+function inverse(c::ComposedBijectiveMorphism)
+    ComposedBijectiveMorphism(inverse(c.g), inverse(c.f))
 end
 
 # Extend composition operator
@@ -151,7 +159,7 @@ b(x) == b2(b1(x))
 """
 function(∘)(b2::AbstractBijectiveMorphism{B,C},
     b1::AbstractBijectiveMorphism{A,B}) where {A,B,C}
-    compose(b2, b1)
+    ComposedBijectiveMorphism(b1, b2)
 end
 
 # This makes the composition failed for general bijections by default,

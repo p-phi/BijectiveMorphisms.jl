@@ -128,7 +128,7 @@ BijectiveMorphisms.jl guarantees that they are used consistently.
 ?BijectiveMorphism
 ?inverse
 ?validate
-?compose
+?ComposedBijectiveMorphism
 ```
 
 ## Conceptual inspiration
