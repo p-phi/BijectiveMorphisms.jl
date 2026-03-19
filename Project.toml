@@ -1,6 +1,6 @@
 name = "BijectiveMorphisms"
 uuid = "e5cea73a-f0c5-479d-b77e-c222d88b476b"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["P. Phi"]
 
 [deps]
